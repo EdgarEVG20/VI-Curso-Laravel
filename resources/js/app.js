@@ -8,3 +8,5 @@ window.$ = window.jQuery = $;
 
 import 'jquery-ui/ui/widgets/datepicker.js';
 //add as many widget as you may need
+
+const axios = require('axios').default;

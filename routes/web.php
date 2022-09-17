@@ -11,12 +11,14 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::middleware(['auth'])->group(function() {
+Route::middleware(['auth'])->group(function () {
 
     Route::get('students', [StudentsController::class, 'main'])->name('students');
+    Route::get('table_students', [StudentsController::class, 'table'])->name('students.table');
+
     Route::get('books', [BooksController::class, 'main'])->name('books');
+
     Route::get('lends', [LendsController::class, 'main'])->name('lends');
-    
 });
 
 /* Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); */
