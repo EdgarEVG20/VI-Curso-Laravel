@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StudentRequest;
+use App\Mail\StudentsMail;
 use App\Models\Lends;
 use App\Models\Students;
 use datatables;
 // use Dotenv\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class StudentsController extends Controller
@@ -54,13 +56,31 @@ class StudentsController extends Controller
         
     }
 
-    public function update() {
-        return true;
+    public function get_data(Request $request) {
+        $id = $request->ID;/* Cachamos los parametros de axios */
+        $students = Students::where('id', $id)->get();/* Obtenemos el registro solicitado */
+
+        return response()->json($students);/* Devolvemos la información del estudiante */
+    }
+
+    public function update(Request $request) {
+        // dd($request->all());
+        $student = Students::findOrFail($request->id);
+
+        $student->name = $request->name;
+        $student->age = $request->age;
+        $student->num = $request->num;
+        $student->grade = $request->grade;
+        $student->group = $request->group;
+        $student->save();
+        // return true;
+        return redirect()->back();
     }
 
     public function delete() {
         return true;
     }
+
     public function rules() {
         return [
             'name' => 'required',
@@ -70,17 +90,19 @@ class StudentsController extends Controller
             'group' => 'required',
         ];
     }
+
     public function messages() {
         return [
             'name.required' => 'Este campo nombre es requerido',
         ];
     }
+
     public function test() {
         /* Consultar información de la base de datos SELECT */
         // $data = Students::query()->get();
 
         /* Mostrar datos que no han sido eliminados */
-        $data = Students::query()->get()->toArray();
+        // $data = Students::query()->get()->toArray();
         /* Mostrar datos que también han sido eliminados */
         $data = Students::query()->withTrashed()->get()->toArray();
 
@@ -136,5 +158,35 @@ class StudentsController extends Controller
         dd($data);
 
         return true;
+    }
+
+    public function pdf() {
+        // return true;
+
+        // $student = Students::where('id', 10)->get();
+        $student = Students::query()->get();
+
+        $pdf = \PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('app.pdf.students', ['data' => $student])->setPaper('legal', 'portrait');
+        //$pdf = \PDF::loadHtml($html)->setPaper('letter','landscape')->setPaper('legal', 'portrait');
+
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf ->get_canvas();
+        $canvas->page_text(540, 980, "Pagina {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        $canvas->page_text(10, 10, "Folio: " . 10, null, 10, array(0, 0, 0));
+
+        return $pdf->stream('PDF.pdf');
+    }
+
+    public function email() {
+        $students = Students::where('id', 10)->get();
+        Mail::to('cliente@gmail.com')->send(new StudentsMail($students));
+
+        if (count(Mail::failures()) !== 0) {
+            return "Fail";
+        } else {
+            return "Success";
+        }
     }
 }

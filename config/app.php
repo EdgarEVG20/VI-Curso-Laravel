@@ -169,6 +169,8 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         /* Data tables */
         Yajra\DataTables\DataTablesServiceProvider::class,
+        /* DomPDF */
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -238,6 +240,8 @@ return [
         'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
         /* Data tables */
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        /* Dom PDF */
+        'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ],
 

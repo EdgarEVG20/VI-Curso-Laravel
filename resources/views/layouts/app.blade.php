@@ -91,6 +91,7 @@
         </main>
     </div>
     <script src="{{ asset('js/app.js') }}"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> --}}
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.12.1/sl-1.4.0/datatables.min.js"></script>
     @stack('js')
 </body>
