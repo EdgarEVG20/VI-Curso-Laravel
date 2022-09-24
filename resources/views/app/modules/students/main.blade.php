@@ -30,6 +30,7 @@
             </div>
         </div>
     </div>
+    @include('app.modules.students.modals.add')
 @endsection
 @push('js')
     {{-- <script src="{{ asset('js/students.js') }}"></script> --}}
@@ -61,8 +62,28 @@
             ]
         });
 
-        // $('#btnAddStudents').on('click', function() {
-
-        // });
+        $('#btnAddStudents').on('click', function() {
+            $('#addModalStudents').modal('show');
+        });
     </script>
+
+    {{-- @if (session('status-students') == 'error')
+        <script>
+            $(document).ready(function () {
+                $('#addModalStudents').modal('show');
+            });
+        </script>
+    @endif --}}
+    @if ($errors->any())
+        <script>
+            $(document).ready(function () {
+                $('#addModalStudents').modal('show');
+            });
+        </script>
+    @endif
+    @if (session('status-students') == 'success')
+        <script>
+            alert("Usuario agregado con éxito");
+        </script>
+    @endif
 @endpush

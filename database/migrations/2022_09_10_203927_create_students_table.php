@@ -21,6 +21,7 @@ class CreateStudentsTable extends Migration
             $table->string('grade');
             $table->string('group');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
